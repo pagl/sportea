@@ -11,8 +11,7 @@ class Tournament (models.Model):
     latitude = models.FloatField()
     participants_max = models.IntegerField()
     participants_registered = models.IntegerField()
-    logo = models.ImageField()
-
+    logo = models.ImageField(upload_to="tournament")
     def __str__ (self):
         return self.name
 

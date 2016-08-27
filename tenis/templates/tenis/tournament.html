@@ -1,0 +1,38 @@
+{% extends 'tenis/skeleton.html' %}
+
+{% block title %}{{tournament.name}}{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="thumbnail">
+    <h3>{{tournament.name}}</h3>
+
+    {% if progress < 50 %}
+    <div class="progress">
+      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
+      aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
+      <span class="sr-only">40% Complete</span>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if progress >= 50 and progress <= 80 %}
+    <div class="progress">
+      <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
+      aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
+      <span class="sr-only">40% Complete</span>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if progress > 80 %}
+    <div class="progress">
+      <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
+      aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
+      <span class="sr-only">40% Complete</span>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -14,6 +14,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = 'http://127.0.0.1:8000/media/'
 
 
 # Quick-start development settings - unsuitable for production
@@ -79,7 +82,7 @@ WSGI_APPLICATION = 'sportea.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(DB_DIR, 'db.sqlite3'),
     }
 }
 

@@ -15,7 +15,7 @@ class User (models.Model):
 class Sport (models.Model):
     name = models.CharField(max_length=25)
     app_name = models.CharField(max_length=25)
-    logo = models.ImageField()
+    logo = models.ImageField(upload_to="sport")
 
     def __str__ (self):
         return self.name
