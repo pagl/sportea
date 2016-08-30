@@ -4,35 +4,69 @@
 
 {% block body %}
 <div class="container">
-  <div class="thumbnail">
-    <h3>{{tournament.name}}</h3>
 
-    {% if progress < 50 %}
-    <div class="progress">
-      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
-      aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
-      <span class="sr-only">40% Complete</span>
+  <div class="row">
+    <div class="thumbnail">
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-success">Join</button>
+      </div>
+
+      <h3>{{tournament.name}}</h3>
+
+      <p class="text-gray">{{tournament.organizer.first_name}} {{tournament.organizer.last_name}}</p>
+
+      {% if progress < 50 %}
+      <div class="progress">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
+        aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
+        <span class="sr-only">40% Complete</span>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if progress >= 50 and progress <= 80 %}
+      <div class="progress">
+        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
+        aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
+        <span class="sr-only">40% Complete</span>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if progress > 80 %}
+      <div class="progress">
+        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
+        aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
+        <span class="sr-only">40% Complete</span>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="embed-responsive embed-responsive-16by9">
+        <div id="map" class="embed-responsive-item"></div>
       </div>
     </div>
-    {% endif %}
-
-    {% if progress >= 50 and progress <= 80 %}
-    <div class="progress">
-      <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
-      aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
-      <span class="sr-only">40% Complete</span>
-      </div>
-    </div>
-    {% endif %}
-
-    {% if progress > 80 %}
-    <div class="progress">
-      <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
-      aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
-      <span class="sr-only">40% Complete</span>
-      </div>
-    </div>
-    {% endif %}
   </div>
 </div>
+
+
+
+<script>
+  function initMap() {
+      var myLatLng = {lat: {{tournament.latitude}}, lng: {{tournament.longitude}}};
+
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: myLatLng
+      });
+
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: 'Hello World!'
+      });
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoAiEbtO6z9OTMiIxy8pAtcW4Z2HaJRPY&callback=initMap" async defer></script>
 {% endblock %}

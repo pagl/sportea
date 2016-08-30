@@ -1,0 +1,16 @@
+body {
+  background-color: #F9F9F9;
+}
+
+.margin-top-2 {
+  margin-top: 10px;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+.text-gray {
+  color: #666666;
+}
