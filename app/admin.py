@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from .models import User, Sport
+from .models import Sport
 
-admin.site.register(User)
 admin.site.register(Sport)

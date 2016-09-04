@@ -28,14 +28,16 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <form class="navbar-form navbar-right">
-              <div class="form-group">
-                <input type="text" placeholder="Email" class="form-control">
-              </div>
-              <div class="form-group">
-                <input type="password" placeholder="Password" class="form-control">
-              </div>
-              <button type="submit" class="btn btn-success">Sign in</button>
+              {% if user.is_authenticated %}
+                <button type="submit" formaction="/accounts/logout" class="btn btn-default">Log Out</button>
+              {% else %}
+                <button type="submit" formaction="/accounts/login" class="btn btn-success">Log In</button>
+                <button type="submit" formaction="/accounts/signup" class="btn btn-default">Sign Up</button>
+              {% endif %}
             </form>
+            {% if user.is_authenticated %}
+              <p class="navbar-text navbar-right">{{user.first_name}} {{user.last_name}}</p>
+            {% endif %}
           </div>
         </div>
       </nav>

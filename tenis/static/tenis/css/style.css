@@ -1,9 +1,13 @@
 body {
-  background-color: #F9F9F9;
+  background-color: #F4F4F4;
 }
 
 .margin-top-2 {
   margin-top: 10px;
+}
+
+.margin-right-2 {
+  margin-right: 10px
 }
 
 #map {
@@ -13,4 +17,16 @@ body {
 
 .text-gray {
   color: #666666;
+}
+
+.row-margin-2 {
+  margin: 0 10px 0 10px;
+}
+
+.vcenter {
+    margin-top: 15px;
+}
+
+.float-bottom {
+  margin-top: 52px;
 }

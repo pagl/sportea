@@ -1,51 +1,81 @@
-{% extends 'tenis/skeleton.html' %}
+{% extends 'tenis/base.html' %}
 
 {% block title %}{{tournament.name}}{% endblock %}
 
 {% block body %}
 <div class="container">
-
-  <div class="row">
-    <div class="thumbnail">
-
-      <div class="btn-group">
-        <button type="button" class="btn btn-success">Join</button>
-      </div>
-
-      <h3>{{tournament.name}}</h3>
-
-      <p class="text-gray">{{tournament.organizer.first_name}} {{tournament.organizer.last_name}}</p>
-
-      {% if progress < 50 %}
-      <div class="progress">
-        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
-        aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
-        <span class="sr-only">40% Complete</span>
+  <div class="thumbnail">
+    <div class="row row-margin-2">
+      <div class="row">
+        <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6">
+          <h3>{{tournament.name}}</h3>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 vcenter">
+          <div class="btn-group pull-right">
+            {% if user.is_authenticated %}
+              <button type="button" class="btn btn-default">Join Tournament</button>
+            {% else %}
+            <a href="/accounts/login">
+              <button type="button" class="btn btn-default">Join Tournament</button>
+            </a>
+            {% endif %}
+          </div>
         </div>
       </div>
-      {% endif %}
 
-      {% if progress >= 50 and progress <= 80 %}
-      <div class="progress">
-        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
-        aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
-        <span class="sr-only">40% Complete</span>
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+          <p class="text-gray">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            {{tournament.organizer.first_name}} {{tournament.organizer.last_name}}
+          </p>
+          <p class="text-gray">
+            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+            {{tournament.datetime}}
+          </p>
+          <p class="text-gray">
+            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+            {{tournament.deadline}}
+          </p>
+        </div>
+
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 float-bottom">
+          {% if progress < 50 %}
+          <div class="progress">
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
+            aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
+            <span class="sr-only">40% Complete</span>
+            </div>
+          </div>
+          {% endif %}
+
+          {% if progress >= 50 and progress <= 80 %}
+          <div class="progress">
+            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
+            aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
+            <span class="sr-only">40% Complete</span>
+            </div>
+          </div>
+          {% endif %}
+
+          {% if progress > 80 %}
+          <div class="progress">
+            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
+            aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
+            <span class="sr-only">40% Complete</span>
+            </div>
+          </div>
+          {% endif %}
         </div>
       </div>
-      {% endif %}
+    </div>
 
-      {% if progress > 80 %}
-      <div class="progress">
-        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{tournament.participants_registered}}"
-        aria-valuemin="0" aria-valuemax="{{tournament.participants_max}}" style="width: {{progress}}%">
-        <span class="sr-only">40% Complete</span>
-        </div>
-      </div>
-      {% endif %}
 
-      <div class="embed-responsive embed-responsive-16by9">
-        <div id="map" class="embed-responsive-item"></div>
-      </div>
+
+
+
+    <div class="embed-responsive embed-responsive-16by9">
+      <div id="map" class="embed-responsive-item"></div>
     </div>
   </div>
 </div>

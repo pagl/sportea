@@ -7,9 +7,8 @@ from .models import Sport
 
 def index (request):
     sports = Sport.objects.all()
-    context = {'sports': sports}
+    context = {
+        'sports': sports,
+        'user': request.user,
+    }
     return render_to_response('app/index.html', context=context)
-
-
-def log_in (request):
-    return HttpResponse("LOGUJE BrACIE")
