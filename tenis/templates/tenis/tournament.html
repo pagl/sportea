@@ -13,7 +13,14 @@
         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 vcenter">
           <div class="btn-group pull-right">
             {% if user.is_authenticated %}
-              <button type="button" class="btn btn-default">Join Tournament</button>
+              <a href="{% url 'join' join_id=tournament.id %}">
+                <button type="button" class="btn btn-default">Join Tournament</button>
+              </a>
+              {% if user == tournament.organizer %}
+                <a href="{% url 'edit_id' edit_id=tournament.id %}">
+                  <button type="button" class="btn btn-primary">Edit</button>
+                </a>
+              {% endif %}
             {% else %}
             <a href="/accounts/login">
               <button type="button" class="btn btn-default">Join Tournament</button>
@@ -80,21 +87,27 @@
   </div>
 </div>
 
-
-
 <script>
   function initMap() {
-      var myLatLng = {lat: {{tournament.latitude}}, lng: {{tournament.longitude}}};
-
-      var map = new google.maps.Map(document.getElementById('map'), {
+      var geocoder = new google.maps.Geocoder();
+      var latlng = new google.maps.LatLng(-34.397, 150.644);
+      var mapOptions = {
         zoom: 15,
-        center: myLatLng
-      });
+        center: latlng
+      }
 
-      var marker = new google.maps.Marker({
-        position: myLatLng,
-        map: map,
-        title: 'Hello World!'
+      var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+      geocoder.geocode( { 'address': '{{tournament.address}}'}, function(results, status) {
+            if (status == 'OK') {
+              map.setCenter(results[0].geometry.location);
+              var marker = new google.maps.Marker({
+                  map: map,
+                  position: results[0].geometry.location
+              });
+            } else {
+              alert('Geocode was not successful for the following reason: ' + status);
+            }
       });
   }
 </script>

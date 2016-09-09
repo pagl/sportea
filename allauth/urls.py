@@ -4,7 +4,6 @@ from allauth.compat import importlib
 from allauth.socialaccount import providers
 
 from . import app_settings
-print "WEESLSE"
 
 urlpatterns = [url('^', include('allauth.account.urls'))]
 

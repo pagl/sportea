@@ -11,6 +11,8 @@
     <meta name="description" content="Create, find, and join sport events which you want to!">
     <link rel="stylesheet" type="text/css" href="{% static 'tenis/css/bootstrap.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'tenis/css/style.css' %}" />
+    {% block head %}
+    {% endblock %}
   </head>
 
   <body>
@@ -27,6 +29,19 @@
             <a class="navbar-brand" href="{% url 'index' %}">Sportea</a>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
+            {% if user.is_authenticated %}
+              <ul class="nav navbar-nav">
+                {% block link_new_tournament %}
+                  <li><a href="/tenis/new/">New Tournament</a></li>
+                {% endblock %}
+                {% block link_mytournaments %}
+                  <li><a href="/tenis/mytournaments/">My Tournaments</a></li>
+                {% endblock %}
+                {% block link_mymatches %}
+                  <li><a href="/tenis/mymatches/">My Matches</a></li>
+                {% endblock %}
+              </ul>
+            {% endif %}
             <form class="navbar-form navbar-right">
               {% if user.is_authenticated %}
                 <button type="submit" formaction="/accounts/logout" class="btn btn-default">Log Out</button>
@@ -48,6 +63,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-
+    {% block script %}
+    {% endblock %}
   </body>
 </html>

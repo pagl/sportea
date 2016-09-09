@@ -7,8 +7,7 @@ class Tournament (models.Model):
     organizer = models.ForeignKey(User)
     datetime = models.DateTimeField()
     deadline = models.DateTimeField()
-    longitude = models.FloatField()
-    latitude = models.FloatField()
+    address = models.CharField(max_length=50, default='Perth Australia')
     participants_max = models.IntegerField()
     participants_registered = models.IntegerField()
     logo = models.ImageField(upload_to="tournament")
@@ -24,7 +23,7 @@ class Registration (models.Model):
     ranking = models.CharField(max_length=50, unique=True)
 
     def __str__ (self):
-        return str(sel) + ":" + str(self.tournament)
+        return str(self.player) + ":" + str(self.tournament)
 
 
 class Match (models.Model):

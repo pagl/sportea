@@ -1,0 +1,28 @@
+{% extends 'tenis/base.html' %}
+
+{% block title %}My Matches{% endblock %}
+
+{% block link_mymatches %}
+  <li class="active"><a href="/tenis/mymatches/">My Matches</a></li>
+{% endblock %}
+
+{% block body %}
+  {% if matches %}
+    <div class="container">
+      <div class="row margin-top-2">
+        <div class="col-sm-6 col-md-4">
+          {% for match in matches %}
+           <div class="thumbnail">
+             <div class="caption">
+               <h4 class="list-group-item-heading text-center">You <em>vs</em> {{match.player2.first_name}} {{match.player2.last_name}}</h4>
+               <div class="text-center">
+                 <p><a href="#" class="btn btn-success" role="button">Victory</a> <a href="#" class="btn btn-danger" role="button">Defeat</a></p>
+               </div>
+             </div>
+           </div>
+           {% endfor %}
+         </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

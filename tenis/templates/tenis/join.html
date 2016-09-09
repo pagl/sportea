@@ -1,0 +1,81 @@
+{% extends 'tenis/base.html' %}
+{% load static %}
+
+
+{% block title %}{{tournament.name}}{% endblock %}
+
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'tenis/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}" />
+{% endblock %}
+
+
+{% block body %}
+<div class="container container-form">
+  <h2>Join Tournament</h2>
+
+  <form class="center-form" action="{% url 'register' register_id=tournament.id %}" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-user"></span>
+        </span>
+        <input type="text" readonly value="{{user.first_name}} {{user.last_name}}" class="form-control" name="name" placeholder="Name" aria-describedby="basic-addon1" required />
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-star"></span>
+        </span>
+        <input type="text" readonly value="{{tournament.name}}" class="form-control" name="name" aria-describedby="basic-addon1" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+        <div class='input-group date' id='datetimepicker2'>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+            <input type='datetime' readonly class="form-control" value="{{tournament.datetime}}" name="date" required />
+        </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-map-marker"></span>
+        </span>
+        <input type="text" readonly id="autocomplete" value="{{tournament.address}}" onFocus="geolocate()" name="address" class="form-control" placeholder="Address" aria-describedby="basic-addon1" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-flash"></span>
+        </span>
+        <input type="text" placeholder="License" class="form-control" name="license" aria-describedby="basic-addon1" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-list-alt"></span>
+        </span>
+        <input type="number" class="form-control" name="rank" placeholder="Rank Number" aria-describedby="basic-addon1" min=0 step=1 required />
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button type="submit" class="btn btn-info">Join</button>
+      <button type="submit" formaction="{% url 'tournament_id' tournament_id=tournament.id %}" class="btn btn-default" formnovalidate>Cancel</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

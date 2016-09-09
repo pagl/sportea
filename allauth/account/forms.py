@@ -513,8 +513,8 @@ class ResetPasswordForm(forms.Form):
 
 class ResetPasswordKeyForm(PasswordVerificationMixin, forms.Form):
 
-    password1 = SetPasswordField(label=_("New Password"))
-    password2 = PasswordField(label=_("New Password (again)"))
+    password1 = SetPasswordField(label=_(""))
+    password2 = PasswordField(label=_(""))
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)

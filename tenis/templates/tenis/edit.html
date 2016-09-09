@@ -1,0 +1,166 @@
+{% extends 'tenis/base.html' %}
+{% load static %}
+
+
+{% block title %}{{tournament.name}}{% endblock %}
+
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'tenis/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}" />
+{% endblock %}
+
+
+{% block body %}
+<div class="container container-form">
+  <h2>Edit Tournament</h2>
+
+  <form class="center-form" action="{% url 'update' update_id=tournament.id %}" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-star"></span>
+        </span>
+        <input type="text" value="{{tournament.name}}" class="form-control" name="name" placeholder="Name" aria-describedby="basic-addon1" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+        <div class='input-group date' id='datetimepicker1'>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+            <input type='datetime' value="{{tournament.datetime}}" class="form-control" name="date" placeholder="Tournament Date" required />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class='input-group date' id='datetimepicker2'>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+            <input type='datetime' class="form-control" value="{{tournament.deadline}}" name="deadline" placeholder="Register Until" required />
+        </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-map-marker"></span>
+        </span>
+        <input type="text" id="autocomplete" value="{{tournament.address}}" onFocus="geolocate()" name="address" class="form-control" placeholder="Address" aria-describedby="basic-addon1" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-globe"></span>
+        </span>
+        <input type="number" class="form-control" value="{{tournament.participants_max}}" name="participants" placeholder="Number of participants" aria-describedby="basic-addon1" min=0 step=1 required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-picture"></span>
+        </span>
+        <label class="btn btn-default btn-file" style="width:100%">Load Sponsor Logo
+          <input type="file" accept="image/*" value="{{tournament.logo}}" class="form-control" name="logo" style="display: none;" required />
+        </label>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button type="submit" class="btn btn-primary">Edit </button>
+      <button type="submit" formaction="/tenis/" class="btn btn-default" formnovalidate>Cancel</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script type="text/javascript" src="{% static 'tenis/bower_components/jquery/dist/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'tenis/bower_components/moment/min/moment.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'tenis/js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'tenis/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            minDate: moment(),
+        });
+        $('#datetimepicker2').datetimepicker({
+            useCurrent: false,
+            minDate: moment(),
+        });
+
+        $("#datetimepicker1").on("dp.change", function (e) {
+            $('#datetimepicker2').data("DateTimePicker").maxDate(e.date);
+        });
+
+        $("#datetimepicker2").on("dp.change", function (e) {
+            $('#datetimepicker1').data("DateTimePicker").minDate(e.date);
+        });
+    });
+  </script>
+
+  <script>
+     var placeSearch, autocomplete;
+     var componentForm = {
+       street_number: 'short_name',
+       route: 'long_name',
+       locality: 'long_name',
+       administrative_area_level_1: 'short_name',
+       country: 'long_name',
+       postal_code: 'short_name'
+     };
+
+     function initAutocomplete() {
+       autocomplete = new google.maps.places.Autocomplete(
+           /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+           {types: ['geocode']});
+
+       autocomplete.addListener('place_changed', fillInAddress);
+     }
+
+     function fillInAddress() {
+       var place = autocomplete.getPlace();
+
+       for (var component in componentForm) {
+         document.getElementById(component).value = '';
+         document.getElementById(component).disabled = false;
+       }
+
+       for (var i = 0; i < place.address_components.length; i++) {
+         var addressType = place.address_components[i].types[0];
+         if (componentForm[addressType]) {
+           var val = place.address_components[i][componentForm[addressType]];
+           document.getElementById(addressType).value = val;
+         }
+       }
+     }
+
+     function geolocate() {
+       if (navigator.geolocation) {
+         navigator.geolocation.getCurrentPosition(function(position) {
+           var geolocation = {
+             lat: position.coords.latitude,
+             lng: position.coords.longitude
+           };
+           var circle = new google.maps.Circle({
+             center: geolocation,
+             radius: position.coords.accuracy
+           });
+           autocomplete.setBounds(circle.getBounds());
+         });
+       }
+     }
+
+   </script>
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoAiEbtO6z9OTMiIxy8pAtcW4Z2HaJRPY&libraries=places&callback=initAutocomplete"
+       async defer></script>
+{% endblock %}
