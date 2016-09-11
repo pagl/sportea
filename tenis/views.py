@@ -168,9 +168,10 @@ def add_tournament (request):
 
 def search (request):
     if request.method == 'POST':
-        search = request.POST.get('search', '')
-        tournaments = Tournament.objects.filter(Q(name__icontains=search) | Q(address__icontains=search)).order_by('datetime')
-        print tournaments
+        search = request.POST.get('search-val', '')
+        today = datetime.datetime.now()
+        tournaments = Tournament.objects.filter(Q(name__icontains=search) | Q(address__icontains=search)).filter(datetime__gte=today).order_by('datetime')
+
         context = {
             'tournaments': tournaments,
             'pages': [0],
@@ -215,14 +216,59 @@ def history (request):
     return render(request, 'tenis/history.html', context)
 
 
+def score (request):
+    if (not request.user.is_authenticated()):
+        raise Http404("Access Denied")
+
+    if request.method == 'POST':
+        match_id = request.POST.get('match-id', '')
+        scoreYou = request.POST.get('scoreYou', '')
+        scoreOpp = request.POST.get('scoreOpp', '')
+        match = Match.objects.get(id=match_id)
+
+        if (match.player1 != request.user and match.player2 != request.user):
+            raise Http404("Access Denied")
+
+        if (match.p1_points == -1 and match.p2_points == -1):
+            if (match.player1 == request.user and match.p1_voted == False):
+                match.p1_points = scoreYou
+                match.p2_points = scoreOpp
+                match.p1_voted = True
+            elif (match.player2 == request.user and match.p2_voted == False):
+                match.p2_points = scoreYou
+                match.p1_points = scoreOpp
+                match.p2_voted = True
+        else:
+            if (match.player1 == request.user and match.p1_voted == False):
+                if (match.p1_points == int(scoreYou) and match.p2_points == int(scoreOpp)):
+                    match.confirmed = True
+                else:
+                    match.p1_points = -1
+                    match.p2_points = -1
+                    match.p1_voted = False
+                    match.p2_voted = False
+            elif (match.player2 == request.user and match.p2_voted == False):
+                if (match.p2_points == int(scoreYou) and match.p1_points == int(scoreOpp)):
+                    match.confirmed = True
+                else:
+                    match.p1_points = -1
+                    match.p2_points = -1
+                    match.p1_voted = False
+                    match.p2_voted = False
+        match.save()
+    return redirect('tenis.views.index')
+
+
+
 def matches (request):
     if (not request.user.is_authenticated()):
         raise Http404("Access Denied")
-    matches = Match.objects.all().filter(Q(player1=request.user) | Q(player2=request.user))
+    matches = Match.objects.all().filter((Q(player1=request.user) & Q(p1_voted=False)) | (Q(player2=request.user) & Q(p2_voted=False))).filter(confirmed=False)
     opponents = [match.player1 if match.player1 != request.user else match.player2 for match in matches]
-    print opponents
+
+    matches_info = zip(matches, opponents)
+
     context = {
-        'matches': matches,
-        'opponents': opponents,
+        'matches_info': matches_info,
     }
     return render(request, 'tenis/matches.html', context)

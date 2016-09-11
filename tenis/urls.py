@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^new/$', views.new_tournament, name='new'),
     url(r'^search/$', views.search, name='search'),
     url(r'^join/(?P<join_id>.+)/$', views.join_tournament, name='join'),
+    url(r'^score/$', views.score, name='score'),
     url(r'^register/(?P<register_id>.+)/$', views.register_to_tournament, name='register'),
     url(r'^update/(?P<update_id>.+)/$', views.update_tournament, name='update'),
     url(r'^registered/$', views.registered, name='registered'),

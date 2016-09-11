@@ -10,6 +10,10 @@ body {
   margin-top: 10px;
 }
 
+.margin-top-3 {
+  margin-top: 18px;
+}
+
 .margin-right-2 {
   margin-right: 10px
 }
@@ -49,8 +53,8 @@ body {
 
 .sponsor-img {
   display: block;
-  max-width:30px;
-  max-height:30px;
+  max-width:35px;
+  max-height:35px;
   width: auto;
   height: auto;
 }
@@ -58,4 +62,24 @@ body {
 
 .navbar-tennis {
   border-bottom: 2px solid #99DD99;
+}
+
+.score-text {
+  width: 90px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
 }

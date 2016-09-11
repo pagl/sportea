@@ -7,22 +7,43 @@
 {% endblock %}
 
 {% block body %}
-  {% if matches %}
-    <div class="container">
-      <div class="row margin-top-2">
-        <div class="col-sm-6 col-md-4">
-          {% for match in matches %}
-           <div class="thumbnail">
-             <div class="caption">
-               <h4 class="list-group-item-heading text-center">You <em>vs</em> {{match.player2.first_name}} {{match.player2.last_name}}</h4>
-               <div class="text-center">
-                 <p><a href="#" class="btn btn-success" role="button">Victory</a> <a href="#" class="btn btn-danger" role="button">Defeat</a></p>
-               </div>
-             </div>
-           </div>
-           {% endfor %}
-         </div>
+{% if matches_info %}
+  <div class="container">
+    <div class="row">
+      <div class="list-group">
+        {% for match, opponent in matches_info %}
+            <div class="list-group-item">
+              <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                  <h4 class="list-group-item-heading">{{match.tournament.name}}</h4>
+                  <p class="text-gray">
+                    <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                    {{match.tournament.datetime}}
+                  </p>
+                </div>
+
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                  <h4 class="margin-top-3">
+                    {{opponent.first_name}} {{opponent.last_name}}
+                  </h4>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                  <form class="form-inline margin-top-2" action="/tenis/score/" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <input type="number" class="form-control score-text" name="scoreYou" placeholder="Your's Points" aria-describedby="basic-addon1" min=0 step=1 required />
+                      <input type="number" class="form-control score-text" name="scoreOpp" placeholder="Opponent's Points" aria-describedby="basic-addon1" min=0 step=1 required />
+                      <input type='hidden' name="match-id" value="{{match.id}}" />
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit Score</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
       </div>
     </div>
-  {% endif %}
+  </div>
+{% endif %}
 {% endblock %}

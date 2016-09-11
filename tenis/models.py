@@ -31,8 +31,11 @@ class Match (models.Model):
     stage = models.IntegerField()
     player1 = models.ForeignKey(User, related_name='player1')
     player2 = models.ForeignKey(User, related_name='player2')
-    p1_vote = models.IntegerField()
-    p2_vote = models.IntegerField()
+    p1_points = models.IntegerField(default=-1)
+    p2_points = models.IntegerField(default=-1)
+    p1_voted = models.BooleanField(default='False')
+    p2_voted = models.BooleanField(default='False')
+    confirmed = models.BooleanField(default='False')
 
     def __str__ (self):
         return str(self.tournament) + "_" + str(self.player1) + ":" + str(self.player2)
