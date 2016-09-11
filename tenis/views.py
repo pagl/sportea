@@ -62,8 +62,15 @@ def tournament (request, tournament_id):
     hours = int(diff.seconds / 3600)
     minutes = int((diff.seconds / 60) % 60)
     seconds = int(diff.seconds % 60)
-
     progress = int(100 * tournament.participants_registered / tournament.participants_max)
+
+    ladder = []
+    if tournament.stage != 0:
+        for stage in range(1, tournament.stage):
+            ladder.append(Match.objects.filter(Q(tournament=tournament)
+                                         & Q(stage=stage)))
+
+
     context = {
                'tournament': tournament,
                'progress': progress,
@@ -72,6 +79,7 @@ def tournament (request, tournament_id):
                'hours': hours,
                'minutes': minutes,
                'seconds': seconds,
+               'ladder': ladder,
               }
     return render(request, 'tenis/tournament.html', context)
 
@@ -322,7 +330,6 @@ def refresh (request):
                             p2_voted = False,
                             confirmed = False
                     )
-                    print match
                     match.save()
                 tournament.stage = 1
                 tournament.max_stage = int(math.log(len(players), 2))
