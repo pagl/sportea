@@ -32,13 +32,19 @@
             {% if user.is_authenticated %}
               <ul class="nav navbar-nav">
                 {% block link_new_tournament %}
-                  <li><a href="/tenis/new/">New Tournament</a></li>
+                  <li><a href="/tenis/new/">New</a></li>
                 {% endblock %}
-                {% block link_mytournaments %}
-                  <li><a href="/tenis/mytournaments/">My Tournaments</a></li>
+                {% block link_tournaments %}
+                  <li><a href="/tenis">Tournaments</a></li>
                 {% endblock %}
-                {% block link_mymatches %}
-                  <li><a href="/tenis/mymatches/">My Matches</a></li>
+                {% block link_matches %}
+                  <li><a href="/tenis/matches/">Matches</a></li>
+                {% endblock %}
+                {% block link_registered %}
+                  <li><a href="/tenis/registered/">Registered</a></li>
+                {% endblock %}
+                {% block link_history %}
+                  <li><a href="/tenis/history/">History</a></li>
                 {% endblock %}
               </ul>
             {% endif %}

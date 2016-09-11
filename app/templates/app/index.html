@@ -40,8 +40,17 @@
       </div>
     </nav>
 
+    <div class="bg"></div>
+    <div class="jumbotron text-center">
+      <h1>Sportea</h1>
+      <p>Create. Join. Compete. Win.</p>
+    </div>
+
     {% if sports %}
       <div class="container">
+        <div class="row">
+          <h1>Sports</h1>
+        </div>
         <div class="row">
           {% for sport in sports %}
             <a href="{% url 'sport_app' sport.app_name %}">

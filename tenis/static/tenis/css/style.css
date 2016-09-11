@@ -2,6 +2,10 @@ body {
   background-color: #F4F4F4;
 }
 
+.margin-top-1 {
+  margin-top: 5px;
+}
+
 .margin-top-2 {
   margin-top: 10px;
 }
@@ -40,4 +44,18 @@ body {
 
 .container-form{
   width: 400px;
+}
+
+
+.sponsor-img {
+  display: block;
+  max-width:30px;
+  max-height:30px;
+  width: auto;
+  height: auto;
+}
+
+
+.navbar-tennis {
+  border-bottom: 2px solid #99DD99;
 }

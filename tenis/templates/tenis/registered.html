@@ -1,0 +1,27 @@
+{% extends 'tenis/base.html' %}
+
+{% block title %}Registered{% endblock %}
+
+{% block link_registered %}
+  <li class="active"><a href="/tenis/registered/">Registered</a></li>
+{% endblock %}
+
+{% block body %}
+  {% if tournaments %}
+    <div class="container">
+      <div class="row margin-top-2">
+        <div class="list-group">
+          {% for tournament in tournaments %}
+            <a href="{% url 'tournament_id' tournament_id=tournament.id %}" class="list-group-item">
+              <h4 class="list-group-item-heading">{{tournament.name}}</h4>
+              <p>{{tournament.datetime}}</p>
+              <p>Participants:
+                <span class="badge">{{tournament.participants_registered}} / {{tournament.participants_max}}</span>
+              </p>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

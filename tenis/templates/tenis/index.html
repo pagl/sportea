@@ -2,18 +2,25 @@
 
 {% block title %}Tenis{% endblock %}
 
+{% block link_tournaments %}
+  <li class="active"><a href="/tenis">Tournaments</a></li>
+{% endblock %}
+
 {% block body %}
   {% if tournaments %}
     <div class="container">
       <div class="row">
-        <div class="input-group">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">
-              <span class="glyphicon glyphicon-search" aria-hidden="True"></span>
-            </button>
-          </span>
-          <input type="text" class="form-control" placeholder="Find Tournament" />
-        </div>
+        <form action="/tenis/search/" method="post">
+          {% csrf_token %}
+          <div class="input-group">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit">
+                <span class="glyphicon glyphicon-search" aria-hidden="True"></span>
+              </button>
+            </span>
+            <input type="text" name='search-val' class="form-control" placeholder="Find Tournament" />
+          </div>
+        </form>
       </div>
       <div class="row margin-top-2">
         <div class="list-group">
@@ -21,9 +28,8 @@
             <a href="{% url 'tournament_id' tournament_id=tournament.id %}" class="list-group-item">
               <h4 class="list-group-item-heading">{{tournament.name}}</h4>
               <p>{{tournament.datetime}}</p>
-              <p>
-                Free Places
-                <span class="badge">{{tournament.participants_registered}}</span>
+              <p>Participants:
+                <span class="badge">{{tournament.participants_registered}} / {{tournament.participants_max}}</span>
               </p>
             </a>
           {% endfor %}

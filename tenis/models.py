@@ -19,8 +19,8 @@ class Tournament (models.Model):
 class Registration (models.Model):
     player = models.ForeignKey(User)
     tournament = models.ForeignKey(Tournament)
-    license = models.CharField(max_length=50, unique=True)
-    ranking = models.CharField(max_length=50, unique=True)
+    license = models.CharField(max_length=50)
+    ranking = models.CharField(max_length=50)
 
     def __str__ (self):
         return str(self.player) + ":" + str(self.tournament)
