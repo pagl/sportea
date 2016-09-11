@@ -12,7 +12,30 @@
     <div class="row row-margin-2">
       <div class="row">
         <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6">
-          <h3>{{tournament.name}}</h3>
+          <h3>
+            {{tournament.name}}
+            {% if days >= 7 %}
+            <button type="button" class="btn btn-success btn-xs margin-bottom-2">
+              {{days}} days left
+            </button>
+            {% elif days < 7 and days >= 3 %}
+              <button type="button" class="btn btn-info btn-xs margin-bottom-2">
+                {{days}} days left
+              </button>
+            {% elif days < 3 and days > 0 %}
+            <button type="button" class="btn btn-primary btn-xs margin-bottom-2">
+              {{days}} days left
+            </button>
+            {% elif hours > 0 %}
+            <button type="button" class="btn btn-warning btn-xs margin-bottom-2">
+              {{hours}} hours left
+            </button>
+            {% else %}
+            <button type="button" class="btn btn-danger btn-xs margin-bottom-2">
+              {{minutes}} minutes left
+            </button>
+            {% endif %}
+          </h3>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 vcenter">
           <div class="btn-group pull-right">

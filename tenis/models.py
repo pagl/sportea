@@ -4,13 +4,17 @@ from django.contrib.auth.models import User
 
 class Tournament (models.Model):
     name = models.CharField(max_length=30)
-    organizer = models.ForeignKey(User)
+    organizer = models.ForeignKey(User, related_name='organizer')
     datetime = models.DateTimeField()
     deadline = models.DateTimeField()
-    address = models.CharField(max_length=50, default='Perth Australia')
+    address = models.CharField(max_length=50, default='Perth, Australia')
     participants_max = models.IntegerField()
     participants_registered = models.IntegerField()
     logo = models.ImageField(upload_to="tournament")
+    stage = models.IntegerField(default=0)
+    max_stage = models.IntegerField(default=0)
+    winner = models.ForeignKey(User, null=True, blank=True, related_name='winner')
+
 
     def __str__ (self):
         return self.name

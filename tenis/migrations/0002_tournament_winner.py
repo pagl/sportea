@@ -2,18 +2,20 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tenis', '0006_auto_20160907_1839'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('tenis', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='tournament',
-            name='address',
-            field=models.CharField(default=b'Perth Australia', max_length=50),
+            name='winner',
+            field=models.ForeignKey(related_name='winner', blank=True, to=settings.AUTH_USER_MODEL, null=True),
         ),
     ]

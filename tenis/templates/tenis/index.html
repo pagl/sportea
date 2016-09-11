@@ -26,7 +26,9 @@
         <div class="list-group">
           {% for tournament in tournaments %}
             <a href="{% url 'tournament_id' tournament_id=tournament.id %}" class="list-group-item">
-              <h4 class="list-group-item-heading">{{tournament.name}}</h4>
+              <h4 class="list-group-item-heading">
+                {{tournament.name}}
+              </h4>
               <p>{{tournament.datetime}}</p>
               <p>Participants:
                 <span class="badge">{{tournament.participants_registered}} / {{tournament.participants_max}}</span>

@@ -15,7 +15,7 @@ from django.http import Http404
 def index (request):
     today = datetime.datetime.today()
     tournaments_per_page = 10
-    tournaments = Tournament.objects.filter(datetime__gte=today).order_by('datetime')
+    tournaments = Tournament.objects.filter(deadline__gte=today).order_by('datetime')
     pages = range(0, int(math.ceil(float(len(tournaments)) / tournaments_per_page)))
 
     current_page = 1
@@ -33,12 +33,13 @@ def index (request):
 def tournaments_list (request, current_page):
     today = datetime.datetime.today()
     tournaments_per_page = 10
-    tournaments = Tournament.objects.filter(datetime__gte=today).order_by('datetime')
+    tournaments = Tournament.objects.filter(deadline__gte=today).order_by('datetime')
     pages = range(0, int(math.ceil(float(len(tournaments)) / tournaments_per_page)))
 
     tournamentRangeStart = (int(current_page) - 1)  * tournaments_per_page
     tournamentRangeEnd = tournamentRangeStart + tournaments_per_page
     tournaments = tournaments[tournamentRangeStart : tournamentRangeEnd]
+
     context = {
         'tournaments': tournaments,
         'pages': pages,
@@ -54,8 +55,24 @@ def tournament (request, tournament_id):
         registered = Registration.objects.filter(Q(player=user) & Q(tournament=tournament)).count()
     else:
         registered = 0
+
+    today = datetime.datetime.now()
+    diff = (tournament.deadline.replace(tzinfo=None) - today)
+    days = diff.days
+    hours = int(diff.seconds / 3600)
+    minutes = int((diff.seconds / 60) % 60)
+    seconds = int(diff.seconds % 60)
+
     progress = int(100 * tournament.participants_registered / tournament.participants_max)
-    context = {'tournament': tournament, 'progress': progress, 'registered': registered}
+    context = {
+               'tournament': tournament,
+               'progress': progress,
+               'registered': registered,
+               'days': days,
+               'hours': hours,
+               'minutes': minutes,
+               'seconds': seconds,
+              }
     return render(request, 'tenis/tournament.html', context)
 
 
@@ -91,15 +108,17 @@ def register_to_tournament (request, register_id):
     if request.method == 'POST':
         license = request.POST.get('license', '')
         rank = request.POST.get('rank', '')
+        valid = Registration.objects.filter(Q(tournament=tournament) & (Q(ranking=rank) | Q(license=license))).count() == 0
 
-        registration = Registration(player = player,
-                                    tournament = tournament,
-                                    license = license,
-                                    ranking = rank)
-        if (tournament.participants_registered < tournament.participants_max):
-            tournament.participants_registered += 1
-            tournament.save()
-            registration.save()
+        if (valid):
+            registration = Registration(player = player,
+                                        tournament = tournament,
+                                        license = license,
+                                        ranking = rank)
+            if (tournament.participants_registered < tournament.participants_max):
+                tournament.participants_registered += 1
+                tournament.save()
+                registration.save()
 
     return redirect('tenis.views.tournament', tournament.id)
 
@@ -272,3 +291,86 @@ def matches (request):
         'matches_info': matches_info,
     }
     return render(request, 'tenis/matches.html', context)
+
+
+def refresh (request):
+    tournaments = Tournament.objects.all()
+    today = datetime.datetime.now()
+
+    for tournament in tournaments:
+        if (tournament.datetime.replace(tzinfo=None) < today
+        and tournament.stage == 0):
+            if (tournament.participants_registered != tournament.participants_max):
+                tournament.delete()
+            else:
+                players = [registration.player
+                           for registration
+                           in Registration.objects.filter(tournament=tournament).order_by('ranking')]
+
+                for idx in range(int(len(players) / 2)):
+                    player1 = players[idx]
+                    player2 = players[len(players) - 1 - idx]
+
+                    match = Match(
+                            tournament = tournament,
+                            stage = 1,
+                            player1 = player1,
+                            player2 = player2,
+                            p1_points = -1,
+                            p2_points = -1,
+                            p1_voted = False,
+                            p2_voted = False,
+                            confirmed = False
+                    )
+                    print match
+                    match.save()
+                tournament.stage = 1
+                tournament.max_stage = int(math.log(len(players), 2))
+                tournament.save()
+
+        elif (tournament.stage > 0 and tournament.stage < tournament.max_stage):
+            matchesInStage = int(int(math.pow(2, tournament.max_stage)) / int(math.pow(2, tournament.stage)))
+            matches = [match
+                       for match
+                       in Match.objects.filter(Q(tournament=tournament)
+                                             & Q(stage=tournament.stage)
+                                             & Q(confirmed=True))]
+            if (len(matches) == matchesInStage):
+                players = []
+                for match in matches:
+                    if (match.p1_points > match.p2_points):
+                        players.append(match.player1)
+                    else:
+                        players.append(match.player2)
+                for idx in range(int(len(players) / 2)):
+                    player1 = players[idx]
+                    player2 = players[len(players) - 1 - idx]
+
+                    match = Match(
+                            tournament = tournament,
+                            stage = tournament.stage + 1,
+                            player1 = player1,
+                            player2 = player2,
+                            p1_points = -1,
+                            p2_points = -1,
+                            p1_voted = False,
+                            p2_voted = False,
+                            confirmed = False
+                    )
+                    match.save()
+                tournament.stage += 1
+                tournament.save()
+
+        elif (tournament.stage > 0 and tournament.stage == tournament.max_stage):
+            matches = Match.objects.filter(Q(tournament=tournament)
+                                       & Q(stage=tournament.stage)
+                                       & Q(confirmed=True))
+            for match in matches:
+                if (match.p1_points > match.p2_points):
+                    tournament.winner = match.player1
+                else:
+                    tournament.winner = match.player2
+            tournament.stage += 1
+            tournament.save()
+
+    return HttpResponse()

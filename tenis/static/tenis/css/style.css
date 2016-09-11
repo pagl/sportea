@@ -65,7 +65,7 @@ body {
 }
 
 .score-text {
-  width: 90px;
+  width: 50px;
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -82,4 +82,9 @@ input[type=number]::-webkit-outer-spin-button {
 
   display: flex;
   align-items: center;
+}
+
+.margin-bottom-2 {
+  margin-left: 5px;
+  margin-bottom: 10px;
 }
