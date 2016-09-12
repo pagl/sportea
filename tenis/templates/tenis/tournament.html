@@ -140,55 +140,46 @@
   </div>
 
   {% if ladder %}
-    <div class="thumbnail">
-      <div class="container">
-        {% for matches in ladder %}
+    {% for matches in ladder %}
+      <div class="thumbnail">
+        <div class="container">
           <div class="row row-margin-3">
-            {% for match in matches %}
-              <div class="row-fluid">
-                <div class="score" style="display:inline-block">
-                  <div class="row">
-                    {% if match.p1_points > match.p2_points %}
-                      <button type="button" class="btn btn-default" aria-label="Left Align">
-                        {{match.p1_points}}
-                      </button>
-                      <button type="button" class="btn btn-success">
-                        {{match.player1.first_name}} {{match.player1.last_name}}
-                      </button>
-                    {% else %}
-                      <button type="button" class="btn btn-default" aria-label="Left Align">
-                        {{match.p1_points}}
-                      </button>
-                      <button type="button" class="btn btn-default">
-                        {{match.player1.first_name}} {{match.player1.last_name}}
-                      </button>
-                    {% endif %}
-                  </div>
-
-                  <div class="row margin-top-1">
-                    {% if match.p2_points > match.p1_points %}
-                      <button type="button" class="btn btn-success" aria-label="Left Align">
-                        {{match.p2_points}}
-                      </button>
-                      <button type="button" class="btn btn-success">
-                        {{match.player2.first_name}} {{match.player2.last_name}}
-                      </button>
-                    {% else %}
-                      <button type="button" class="btn btn-default" aria-label="Left Align">
-                        {{match.p2_points}}
-                      </button>
-                      <button type="button" class="btn btn-default">
-                        {{match.player2.first_name}} {{match.player2.last_name}}
-                      </button>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-            {% endfor %}
+            <div class="row">
+              {% for match in matches %}
+                <div class="col-lg-2">
+                  <div class="input-group">
+                    <input type="text" class="form-control" value="{{match.player1.first_name}} {{match.player1.last_name}}" readonly>
+                    <span class="input-group-btn">
+                      {% if match.p1_points > match.p2_points %}
+                        <button class="btn btn-success" type="button">{{match.p1_points}}</button>
+                      {% else %}
+                        <button class="btn btn-default" type="button">{{match.p1_points}}</button>
+                      {% endif %}
+                    </span>
+                  </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+              {% endfor %}
+              </div><!-- /.row -->
+              <div class="row">
+                {% for match in matches %}
+                  <div class="col-lg-2">
+                    <div class="input-group">
+                      <input type="text" class="form-control" value="{{match.player2.first_name}} {{match.player2.last_name}}" readonly>
+                      <span class="input-group-btn">
+                        {% if match.p2_points > match.p1_points %}
+                          <button class="btn btn-success" type="button">{{match.p2_points}}</button>
+                        {% else %}
+                          <button class="btn btn-default" type="button">{{match.p2_points}}</button>
+                        {% endif %}
+                      </span>
+                    </div><!-- /input-group -->
+                  </div><!-- /.col-lg-6 -->
+                {% endfor %}
+              </div><!-- /.row -->
+            </div>
           </div>
-        {% endfor %}
-      </div>
-    </div>
+        </div>
+    {% endfor %}
   {% endif %}
 
   <div class="row">
